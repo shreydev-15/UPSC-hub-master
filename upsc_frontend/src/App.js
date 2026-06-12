@@ -9,7 +9,7 @@ import {
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://upsc-hub-master.onrender.com';
 
 /* ═══════════════════════════════════════════════════
    APP COMPONENT

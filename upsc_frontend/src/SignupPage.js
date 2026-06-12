@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Loader2, User, Lock, Mail, CheckCircle, ChevronRight, Eye, EyeOff, Shield, Zap } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://upsc-hub-master.onrender.com';
 
 const SignupPage = ({ onSignup, onSwitchToLogin, showNotification }) => {
   const [username, setUsername] = useState('');
