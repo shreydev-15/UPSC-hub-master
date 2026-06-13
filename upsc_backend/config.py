@@ -49,4 +49,14 @@ CORS_ORIGINS = [
     'http://localhost:3000',  # React default port
     'http://localhost:5173',  # Vite default port
     'http://localhost:8080',  # Vue default port
+    'https://upsc-hub-master-humi.vercel.app',  # Deployed Vercel URL
 ]
+
+# Allow overriding/appending via environment variables for easy deployment configuration
+env_origins = os.environ.get('CORS_ORIGINS') or os.environ.get('ALLOWED_ORIGINS')
+if env_origins:
+    CORS_ORIGINS.extend([origin.strip() for origin in env_origins.split(',') if origin.strip()])
+
+frontend_url = os.environ.get('FRONTEND_URL')
+if frontend_url:
+    CORS_ORIGINS.append(frontend_url.strip())

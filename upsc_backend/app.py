@@ -12,10 +12,18 @@ from utils import (
 from config import HOST, PORT, DEBUG, AUDIO_FOLDER, CORS_ORIGINS
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)  # Generate a secret key for sessions
+# Generate a secret key for sessions, preferring environment variable for persistence
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 
 # Enable CORS for frontend integration with credentials support
 CORS(app, origins=CORS_ORIGINS, supports_credentials=True)
+
+# Configure session cookies for cross-domain request authentication (Vercel -> Render)
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE='None',
+    SESSION_COOKIE_HTTPONLY=True
+)
 
 # Initialize database on startup
 init_db()
