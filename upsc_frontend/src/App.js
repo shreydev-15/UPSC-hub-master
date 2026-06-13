@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, RefreshCw, BookOpen, Calendar, ExternalLink,
-  TrendingUp, Loader2, AlertCircle, X, ChevronDown, LogOut,
-  User as UserIcon, Pause, Play, Zap, FileText, Globe, Newspaper,
-  Sparkles, AlignLeft, BarChart2, Wifi, Filter, Tag
+  TrendingUp, Loader2, AlertCircle, ChevronDown, LogOut,
+  User as UserIcon, Pause, Play, FileText, Newspaper,
+  Sparkles, AlignLeft, Filter, Tag
 } from 'lucide-react';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -29,7 +29,7 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [audioLoading, setAudioLoading] = useState({});
   const [audioObjects, setAudioObjects] = useState({});
-  const [audioUrls, setAudioUrls] = useState({});
+  const [, setAudioUrls] = useState({});
   const [playingAudioId, setPlayingAudioId] = useState(null);
   const audioObjectsRef = useRef({});
   const audioUrlsRef = useRef({});
@@ -82,11 +82,12 @@ const App = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [handleMouseMove]);
 
-  /* ── Auth ─────────────────────────────────────── */
-  useEffect(() => { checkAuth(); }, []);
-  useEffect(() => { if (isAuthenticated) fetchArticles(); }, [isAuthenticated]);
+  const showNotification = useCallback((message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/check`, { credentials: 'include' });
       const data = await response.json();
@@ -103,7 +104,7 @@ const App = () => {
     } finally {
       setAuthLoading(false);
     }
-  };
+  }, []);
 
   const handleLogin = (user) => {
     setIsAuthenticated(true);
@@ -122,13 +123,8 @@ const App = () => {
     }
   };
 
-  const showNotification = (message, type = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
-
   /* ── Articles ─────────────────────────────────── */
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -142,7 +138,11 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showNotification]);
+
+  /* ── Auth ─────────────────────────────────────── */
+  useEffect(() => { checkAuth(); }, [checkAuth]);
+  useEffect(() => { if (isAuthenticated) fetchArticles(); }, [isAuthenticated, fetchArticles]);
 
   const fetchNewArticles = async () => {
     try {
@@ -233,9 +233,11 @@ const App = () => {
   };
 
   useEffect(() => {
+    const currentAudioObjects = audioObjectsRef.current;
+    const currentAudioUrls = audioUrlsRef.current;
     return () => {
-      Object.values(audioObjectsRef.current).forEach(audio => { if (audio) { audio.pause(); audio.src = ''; } });
-      Object.values(audioUrlsRef.current).forEach(url => { if (url) URL.revokeObjectURL(url); });
+      Object.values(currentAudioObjects).forEach(audio => { if (audio) { audio.pause(); audio.src = ''; } });
+      Object.values(currentAudioUrls).forEach(url => { if (url) URL.revokeObjectURL(url); });
     };
   }, []);
 

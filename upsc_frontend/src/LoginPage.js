@@ -6,10 +6,10 @@ import * as THREE from 'three';
 import {
   Eye, EyeOff, Loader2, Lock, Mail, BookOpen,
   CheckCircle, Wifi, Users, FileText, Globe,
-  Shield, Zap, TrendingUp, ChevronRight, X
+  Shield, Zap, TrendingUp, ChevronRight
 } from 'lucide-react';
 
-const API_BASE_URL = 'https://upsc-hub-master.onrender.com';
+const API_BASE_URL = 'https://upsc-hub-master.onrender.com';     
 
 /* ═══════════════════════════════════════════════════
    3D SCENE COMPONENTS
@@ -217,7 +217,6 @@ const LoginPage = ({ onLogin, onSwitchToSignup, notification, showNotification }
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [cardParallax, setCardParallax] = useState({ x: 0, y: 0 });
   const [ripple, setRipple] = useState(null);
   const [usernameFocused, setUsernameFocused] = useState(false);
@@ -229,7 +228,6 @@ const LoginPage = ({ onLogin, onSwitchToSignup, notification, showNotification }
   const handleMouseMove = useCallback((e) => {
     const x = e.clientX;
     const y = e.clientY;
-    setMousePos({ x, y });
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
     setCardParallax({
